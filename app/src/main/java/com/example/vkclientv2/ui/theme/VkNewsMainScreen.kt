@@ -10,27 +10,26 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.example.vkclientv2.MainViewModel
 import com.example.vkclientv2.domain.NavigationItem
 import com.example.vkclientv2.navigation.AppNavGraph
+import com.example.vkclientv2.navigation.rememberNavigationState
 
 
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
-    val navHostController = rememberNavController()
+    val navigationState = rememberNavigationState()
     Scaffold(
         bottomBar = {
             NavigationBar {
-                val navBackStackEntry by navHostController.currentBackStackEntryAsState()
+                val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
                 val items = listOf(
                     NavigationItem.Home,
                     NavigationItem.Favorite,
@@ -39,7 +38,7 @@ fun MainScreen(viewModel: MainViewModel) {
                 items.forEach { item ->
                     NavigationBarItem(
                         selected = navBackStackEntry?.destination?.route == item.screen.route,
-                        onClick = { navHostController.navigate(item.screen.route) },
+                        onClick = { navigationState.navigateTo(item.screen.route) },
                         icon = {
                             Icon(
                                 imageVector = item.icon,
@@ -59,7 +58,7 @@ fun MainScreen(viewModel: MainViewModel) {
         }
     ) { paddingValues ->
         AppNavGraph(
-            navHostController = navHostController,
+            navHostController = navigationState.navHostController,
             homeScreenContent = {
                 HomeScreen(
                     viewModel = viewModel,
@@ -75,7 +74,7 @@ fun MainScreen(viewModel: MainViewModel) {
 
 @Composable
 private fun TextCounter(name: String) {
-    var count by remember {
+    var count by rememberSaveable {
         mutableStateOf(0)
     }
 
