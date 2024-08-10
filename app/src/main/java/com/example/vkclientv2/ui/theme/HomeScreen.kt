@@ -1,5 +1,6 @@
 package com.example.vkclientv2.ui.theme
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.vkclientv2.MainViewModel
+import com.example.vkclientv2.domain.FeedPost
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -29,8 +31,39 @@ fun HomeScreen(
     viewModel: MainViewModel,
     paddingValues: PaddingValues
 ) {
-    val feedPosts = viewModel.feedPosts.observeAsState(emptyList())
+    val screenState = viewModel.screenState.observeAsState(HomeScreenState.Initial)
 
+    when (val currentState = screenState.value) {
+        is HomeScreenState.Posts -> FeedPosts(
+            posts = currentState.posts,
+            viewModel = viewModel,
+            paddingValues = paddingValues
+        )
+
+        is HomeScreenState.Comments -> {
+            CommentsScreen(
+                feedPost = currentState.feedPost,
+                comments = currentState.comments,
+                onBackPressed = {
+                    viewModel.closeComments()
+                }
+            )
+            BackHandler {
+                viewModel.closeComments()
+            }
+        }
+
+        is HomeScreenState.Initial -> {}
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@Composable
+private fun FeedPosts(
+    posts: List<FeedPost>,
+    viewModel: MainViewModel,
+    paddingValues: PaddingValues
+) {
     LazyColumn(
         contentPadding = PaddingValues(
             top = 16.dp,
@@ -41,7 +74,7 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(
-            items = feedPosts.value,
+            items = posts,
             key = { it.id }
         ) { feedPost ->
             val dismissState = rememberDismissState(positionalThreshold = { it * 0.5f })
@@ -79,8 +112,8 @@ fun HomeScreen(
                         onShareClickListener = { statisticItem ->
                             viewModel.updateCount(feedPost, statisticItem)
                         },
-                        onCommentsClickListener = { statisticItem ->
-                            viewModel.updateCount(feedPost, statisticItem)
+                        onCommentsClickListener = {
+                            viewModel.showComments(feedPost)
                         }
                     )
                 },
