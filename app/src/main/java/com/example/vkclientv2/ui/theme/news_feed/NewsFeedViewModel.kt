@@ -1,11 +1,10 @@
-package com.example.vkclientv2
+package com.example.vkclientv2.ui.theme.news_feed
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.vkclientv2.domain.FeedPost
 import com.example.vkclientv2.domain.StatisticItem
-import com.example.vkclientv2.ui.theme.NewsFeedScreenState
 
 class NewsFeedViewModel : ViewModel() {
 

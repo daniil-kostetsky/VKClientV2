@@ -1,4 +1,4 @@
-package com.example.vkclientv2.ui.theme
+package com.example.vkclientv2.ui.theme.news_feed
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

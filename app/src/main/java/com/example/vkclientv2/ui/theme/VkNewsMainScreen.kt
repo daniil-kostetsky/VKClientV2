@@ -19,11 +19,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.vkclientv2.NewsFeedViewModel
 import com.example.vkclientv2.domain.FeedPost
 import com.example.vkclientv2.domain.NavigationItem
 import com.example.vkclientv2.navigation.AppNavGraph
 import com.example.vkclientv2.navigation.rememberNavigationState
+import com.example.vkclientv2.ui.theme.comments.CommentsScreen
+import com.example.vkclientv2.ui.theme.news_feed.HomeScreen
 
 
 @Composable
@@ -74,9 +75,12 @@ fun MainScreen() {
                         }
                     )
                 } else {
-                    CommentsScreen {
-                        commentsToPost.value = null
-                    }
+                    CommentsScreen(
+                        onBackPressed = {
+                            commentsToPost.value = null
+                        },
+                        feedPost = commentsToPost.value ?: FeedPost()
+                    )
                 }
 
             },

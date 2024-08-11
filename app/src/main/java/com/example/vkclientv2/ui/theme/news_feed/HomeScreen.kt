@@ -1,4 +1,4 @@
-package com.example.vkclientv2.ui.theme
+package com.example.vkclientv2.ui.theme.news_feed
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.vkclientv2.NewsFeedViewModel
 import com.example.vkclientv2.domain.FeedPost
 
 @Composable

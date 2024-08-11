@@ -1,4 +1,4 @@
-package com.example.vkclientv2.ui.theme
+package com.example.vkclientv2.ui.theme.comments
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -28,14 +28,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.vkclientv2.domain.FeedPost
 import com.example.vkclientv2.domain.PostComment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    feedPost: FeedPost
 ) {
-    val viewModel: CommentsViewModel = viewModel()
+    val viewModel: CommentsViewModel = viewModel(
+        factory = CommentsViewModelFactory(feedPost)
+    )
     val screenState = viewModel.screenState.observeAsState()
     val currentState = screenState.value
     if (currentState is CommentsScreenState.Comments) {
