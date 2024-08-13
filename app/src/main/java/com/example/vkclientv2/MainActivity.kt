@@ -22,6 +22,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.vkclientv2.ui.theme.ActivityResultTest
 import com.example.vkclientv2.ui.theme.MainScreen
 import com.example.vkclientv2.ui.theme.VkClientV2Theme
 import com.example.vkclientv2.ui.theme.news_feed.NewsFeedViewModel
@@ -33,7 +34,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             VkClientV2Theme {
-                MainScreen()
+//                MainScreen()
+                ActivityResultTest()
             }
         }
     }

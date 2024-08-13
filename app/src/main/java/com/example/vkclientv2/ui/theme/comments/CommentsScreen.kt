@@ -31,6 +31,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.vkclientv2.domain.FeedPost
 import com.example.vkclientv2.domain.PostComment
+import com.example.vkclientv2.navigation.encode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
