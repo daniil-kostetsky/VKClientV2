@@ -71,4 +71,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation("com.vk:android-sdk-core:4.0.1")
+    implementation("com.vk:android-sdk-api:4.0.1")
 }

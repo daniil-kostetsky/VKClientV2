@@ -2,6 +2,7 @@ package com.example.vkclientv2
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
@@ -22,10 +23,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.vkclientv2.ui.theme.ActivityResultTest
 import com.example.vkclientv2.ui.theme.MainScreen
 import com.example.vkclientv2.ui.theme.VkClientV2Theme
 import com.example.vkclientv2.ui.theme.news_feed.NewsFeedViewModel
+import com.vk.api.sdk.VK
+import com.vk.api.sdk.auth.VKAuthenticationResult
+import com.vk.api.sdk.auth.VKScope
 
 class MainActivity : ComponentActivity() {
 
@@ -34,8 +37,22 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             VkClientV2Theme {
-//                MainScreen()
-                ActivityResultTest()
+                val authLauncher = rememberLauncherForActivityResult(
+                    contract = VK.getVKAuthActivityResultContract(),
+                    onResult = {
+                        when (it) {
+                            is VKAuthenticationResult.Success -> {
+
+                            }
+
+                            is VKAuthenticationResult.Failed -> {
+
+                            }
+                        }
+                    }
+                )
+                authLauncher.launch(listOf(VKScope.WALL))
+                MainScreen()
             }
         }
     }
