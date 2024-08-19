@@ -1,4 +1,4 @@
-package com.example.vkclientv2.ui.theme
+package com.example.vkclientv2.presentation.main
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.Icon
@@ -21,8 +21,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.vkclientv2.domain.NavigationItem
 import com.example.vkclientv2.navigation.AppNavGraph
 import com.example.vkclientv2.navigation.rememberNavigationState
-import com.example.vkclientv2.ui.theme.comments.CommentsScreen
-import com.example.vkclientv2.ui.theme.news_feed.HomeScreen
+import com.example.vkclientv2.presentation.comments.CommentsScreen
+import com.example.vkclientv2.presentation.news_feed.NewsFeedScreen
 
 
 @Composable
@@ -69,7 +69,7 @@ fun MainScreen() {
         AppNavGraph(
             navHostController = navigationState.navHostController,
             newsFeedScreenContent = {
-                HomeScreen(
+                NewsFeedScreen(
                     paddingValues = paddingValues,
                     onCommentsClickListener = {
                         navigationState.navigateToComments(it)

@@ -1,4 +1,4 @@
-package com.example.vkclientv2.ui.theme.comments
+package com.example.vkclientv2.presentation.comments
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column

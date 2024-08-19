@@ -1,4 +1,4 @@
-package com.example.vkclientv2.ui.theme.comments
+package com.example.vkclientv2.presentation.comments
 
 import com.example.vkclientv2.domain.FeedPost
 import com.example.vkclientv2.domain.PostComment

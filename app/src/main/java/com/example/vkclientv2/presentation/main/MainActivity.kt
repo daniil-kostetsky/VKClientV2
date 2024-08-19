@@ -1,10 +1,9 @@
-package com.example.vkclientv2
+package com.example.vkclientv2.presentation.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -21,38 +20,38 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.vkclientv2.ui.theme.MainScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vkclientv2.ui.theme.VkClientV2Theme
-import com.example.vkclientv2.ui.theme.news_feed.NewsFeedViewModel
+import com.example.vkclientv2.presentation.authorization.AuthState
+import com.example.vkclientv2.presentation.authorization.LoginScreen
 import com.vk.api.sdk.VK
-import com.vk.api.sdk.auth.VKAuthenticationResult
 import com.vk.api.sdk.auth.VKScope
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<NewsFeedViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             VkClientV2Theme {
+                val mainViewModel: MainViewModel = viewModel()
+                val authState = mainViewModel.authState.observeAsState(AuthState.Initial)
                 val authLauncher = rememberLauncherForActivityResult(
                     contract = VK.getVKAuthActivityResultContract(),
                     onResult = {
-                        when (it) {
-                            is VKAuthenticationResult.Success -> {
-
-                            }
-
-                            is VKAuthenticationResult.Failed -> {
-
-                            }
-                        }
+                        mainViewModel.performAuthResult(it)
                     }
                 )
-                authLauncher.launch(listOf(VKScope.WALL))
-                MainScreen()
+                when (authState.value) {
+                    is AuthState.Authorized -> MainScreen()
+                    is AuthState.NotAuthorized -> LoginScreen {
+                        authLauncher.launch(listOf(VKScope.WALL))
+                    }
+
+                    else -> {}
+                }
             }
         }
     }
