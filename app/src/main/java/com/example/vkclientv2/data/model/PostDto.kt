@@ -3,9 +3,8 @@ package com.example.vkclientv2.data.model
 import com.google.gson.annotations.SerializedName
 
 data class PostDto(
-    @SerializedName("id") val id: String, // id post
+    @SerializedName("id") val id: Long, // id post
     @SerializedName("source_id") val communityId: Long,
-    @SerializedName("is_favorite") val isFavorite: Boolean,
     @SerializedName("text") val text: String,
     @SerializedName("date") val date: Long,
     @SerializedName("likes") val likes: LikesDto,

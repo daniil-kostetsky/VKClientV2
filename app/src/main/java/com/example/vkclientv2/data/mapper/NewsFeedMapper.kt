@@ -4,9 +4,7 @@ import com.example.vkclientv2.data.model.NewsFeedResponseDto
 import com.example.vkclientv2.domain.FeedPost
 import com.example.vkclientv2.domain.StatisticItem
 import com.example.vkclientv2.domain.StatisticType
-import java.sql.Timestamp
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.math.absoluteValue
@@ -23,6 +21,7 @@ class NewsFeedMapper {
                     add(
                         FeedPost(
                             id = post.id,
+                            communityId = post.communityId,
                             communityName = group.name,
                             publicationDate = mapTimestampToDate(post.date * 1000),
                             communityImageUrl = group.imageUrl,
@@ -40,7 +39,7 @@ class NewsFeedMapper {
                                     count = post.comments.count
                                 )
                             ),
-                            isFavorite = post.isFavorite
+                            isLiked = post.likes.userLikes > 0
                         )
                     )
                 }

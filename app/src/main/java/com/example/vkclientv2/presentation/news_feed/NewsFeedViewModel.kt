@@ -4,14 +4,10 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.vkclientv2.data.mapper.NewsFeedMapper
-import com.example.vkclientv2.data.network.ApiFactory
+import com.example.vkclientv2.data.repository.NewsFeedRepository
 import com.example.vkclientv2.domain.FeedPost
 import com.example.vkclientv2.domain.StatisticItem
-import com.vk.api.sdk.VKPreferencesKeyValueStorage
-import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.launch
 
 class NewsFeedViewModel(private val application: Application) : AndroidViewModel(application) {
@@ -19,7 +15,7 @@ class NewsFeedViewModel(private val application: Application) : AndroidViewModel
     private val _screenState = MutableLiveData<NewsFeedScreenState>(NewsFeedScreenState.Initial)
     val screenState: LiveData<NewsFeedScreenState> = _screenState
 
-    private val mapper = NewsFeedMapper()
+    private val repository = NewsFeedRepository(application)
 
     init {
         viewModelScope.launch {
@@ -28,11 +24,14 @@ class NewsFeedViewModel(private val application: Application) : AndroidViewModel
     }
 
     private suspend fun loadRecommendations() {
-        val storage = VKPreferencesKeyValueStorage(application)
-        val token = VKAccessToken.restore(storage) ?: return
-        val response = ApiFactory.apiService.loadRecommendations(token.accessToken)
-        val feedPosts = mapper.mapResponseToPosts(response)
-        _screenState.value = NewsFeedScreenState.Posts(feedPosts)
+        _screenState.value = NewsFeedScreenState.Posts(repository.loadRecommendations())
+    }
+
+    fun changeLikeStatus(feedPost: FeedPost) {
+        viewModelScope.launch {
+            repository.changeLikeStatus(feedPost)
+            _screenState.value = NewsFeedScreenState.Posts(repository.feedPosts)
+        }
     }
 
     fun updateCount(feedPost: FeedPost, item: StatisticItem) {

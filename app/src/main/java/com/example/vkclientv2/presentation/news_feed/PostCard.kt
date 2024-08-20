@@ -1,6 +1,5 @@
 package com.example.vkclientv2.presentation.news_feed
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,9 +32,6 @@ import com.example.vkclientv2.R
 import com.example.vkclientv2.domain.FeedPost
 import com.example.vkclientv2.domain.StatisticItem
 import com.example.vkclientv2.domain.StatisticType
-import kotlin.math.ceil
-import kotlin.math.floor
-import kotlin.math.roundToInt
 
 
 @Composable
@@ -73,7 +69,7 @@ fun PostCard(
                 onViewsClickListener = onViewsClickListener,
                 onShareClickListener = onShareClickListener,
                 onCommentsClickListener = onCommentsClickListener,
-                isFavorite = feedPost.isFavorite
+                isFavorite = feedPost.isLiked
             )
         }
     }
