@@ -39,8 +39,6 @@ fun PostCard(
     modifier: Modifier = Modifier,
     feedPost: FeedPost,
     onLikeClickListener: (StatisticItem) -> Unit,
-    onViewsClickListener: (StatisticItem) -> Unit,
-    onShareClickListener: (StatisticItem) -> Unit,
     onCommentsClickListener: (StatisticItem) -> Unit
 ) {
     Card(
@@ -66,8 +64,6 @@ fun PostCard(
             Statistics(
                 statistics = feedPost.statistics,
                 onLikeClickListener = onLikeClickListener,
-                onViewsClickListener = onViewsClickListener,
-                onShareClickListener = onShareClickListener,
                 onCommentsClickListener = onCommentsClickListener,
                 isFavorite = feedPost.isLiked
             )
@@ -117,8 +113,6 @@ private fun PostHeader(
 private fun Statistics(
     statistics: List<StatisticItem>,
     onLikeClickListener: (StatisticItem) -> Unit,
-    onViewsClickListener: (StatisticItem) -> Unit,
-    onShareClickListener: (StatisticItem) -> Unit,
     onCommentsClickListener: (StatisticItem) -> Unit,
     isFavorite: Boolean
 ) {
@@ -147,8 +141,7 @@ private fun Statistics(
             val shareItem = statistics.getItemByType(StatisticType.SHARES)
             IconWithText(
                 iconResId = R.drawable.ic_share,
-                text = formatStatisticCount(shareItem.count),
-                onItemClickListener = { onShareClickListener(shareItem) }
+                text = formatStatisticCount(shareItem.count)
             )
         }
         Row(
@@ -158,8 +151,7 @@ private fun Statistics(
             val viewsItem = statistics.getItemByType(StatisticType.VIEWS)
             IconWithText(
                 iconResId = R.drawable.ic_views_count,
-                text = formatStatisticCount(viewsItem.count),
-                onItemClickListener = { onViewsClickListener(viewsItem) }
+                text = formatStatisticCount(viewsItem.count)
             )
         }
     }
@@ -172,11 +164,13 @@ private fun List<StatisticItem>.getItemByType(type: StatisticType): StatisticIte
 private fun IconWithText(
     iconResId: Int,
     text: String,
-    onItemClickListener: () -> Unit,
+    onItemClickListener: (() -> Unit)? = null,
     tint: Color = MaterialTheme.colorScheme.onSecondary
 ) {
     Row(
-        modifier = Modifier.clickable { onItemClickListener() },
+        modifier = onItemClickListener?.let {
+            Modifier.clickable { it() }
+        } ?: Modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
