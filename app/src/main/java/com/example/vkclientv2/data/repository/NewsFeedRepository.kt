@@ -5,6 +5,7 @@ import androidx.compose.runtime.toMutableStateList
 import com.example.vkclientv2.data.mapper.NewsFeedMapper
 import com.example.vkclientv2.data.network.ApiFactory
 import com.example.vkclientv2.domain.FeedPost
+import com.example.vkclientv2.domain.PostComment
 import com.example.vkclientv2.domain.StatisticItem
 import com.example.vkclientv2.domain.StatisticType
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
@@ -22,6 +23,15 @@ class NewsFeedRepository(application: Application) {
     val feedPosts: List<FeedPost> get() = _feedPosts.toList()
 
     private var nextFrom: String? = null
+
+    suspend fun getComments(feedPost: FeedPost): List<PostComment>{
+        val response = apiService.getComments(
+            token = getAccessToken(),
+            ownerId = feedPost.communityId,
+            postId = feedPost.id
+        )
+        return mapper.mapResponseToComments(response)
+    }
 
     suspend fun deletePost(feedPost: FeedPost) {
         apiService.ignorePost(

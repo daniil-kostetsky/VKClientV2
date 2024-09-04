@@ -1,6 +1,8 @@
 package com.example.vkclientv2.presentation.comments
 
+import android.app.Application
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,13 +25,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.viewModelFactory
+import coil.compose.AsyncImage
+import com.example.vkclientv2.R
 import com.example.vkclientv2.domain.FeedPost
 import com.example.vkclientv2.domain.PostComment
 import com.example.vkclientv2.navigation.encode
@@ -40,7 +49,7 @@ fun CommentsScreen(
     feedPost: FeedPost
 ) {
     val viewModel: CommentsViewModel = viewModel(
-        factory = CommentsViewModelFactory(feedPost)
+        factory = CommentsViewModelFactory(feedPost, LocalContext.current.applicationContext as Application)
     )
     val screenState = viewModel.screenState.observeAsState()
     val currentState = screenState.value
@@ -49,7 +58,7 @@ fun CommentsScreen(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = "Comments for FeedPost id: ${currentState.feedPost.id} ")
+                        Text(text = stringResource(R.string.comments_title))
                     },
                     navigationIcon = {
                         IconButton(onClick = {
@@ -70,8 +79,9 @@ fun CommentsScreen(
                     top = 16.dp,
                     start = 8.dp,
                     end = 8.dp,
-                    bottom = 761.dp
-                )
+                    bottom = 76.dp
+                ),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(
                     items = currentState.comments,
@@ -96,17 +106,19 @@ private fun CommentItem(
                 horizontal = 16.dp
             )
     ) {
-        Image(
-            modifier = Modifier.size(24.dp),
-            painter = painterResource(id = comment.authorAvatarId),
+        AsyncImage(
+            model = comment.authorAvatarUrl,
+            modifier = Modifier
+                .clip(CircleShape)
+                .size(45.dp),
             contentDescription = null
         )
         Spacer(modifier = Modifier.width(8.dp))
         Column {
             Text(
-                text = "${comment.authorName} CommentId: ${comment.id}",
+                text = comment.authorName,
                 color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 12.sp
+                fontSize = 16.sp
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
