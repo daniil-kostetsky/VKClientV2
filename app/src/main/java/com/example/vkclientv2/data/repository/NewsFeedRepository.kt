@@ -9,15 +9,19 @@ import com.example.vkclientv2.domain.FeedPost
 import com.example.vkclientv2.domain.PostComment
 import com.example.vkclientv2.domain.StatisticItem
 import com.example.vkclientv2.domain.StatisticType
+import com.example.vkclientv2.presentation.comments.CommentsScreenState
 import com.vk.api.sdk.VKPreferencesKeyValueStorage
 import com.vk.api.sdk.auth.VKAccessToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.reduce
+import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.stateIn
 
 class NewsFeedRepository(application: Application) {
@@ -47,6 +51,9 @@ class NewsFeedRepository(application: Application) {
             _feedPosts.addAll(posts)
             emit(feedPosts)
         }
+    }.retry {
+        delay(RETRY_TIMEOUT)
+        true
     }
 
     private val apiService = ApiFactory.apiService
@@ -70,14 +77,18 @@ class NewsFeedRepository(application: Application) {
     }
 
 
-    suspend fun getComments(feedPost: FeedPost): List<PostComment> {
+    fun getComments(feedPost: FeedPost): Flow<List<PostComment>> = flow {
         val response = apiService.getComments(
             token = getAccessToken(),
             ownerId = feedPost.communityId,
             postId = feedPost.id
         )
-        return mapper.mapResponseToComments(response)
+        emit(mapper.mapResponseToComments(response))
     }
+        .retry {
+            delay(RETRY_TIMEOUT)
+            true
+        }
 
     suspend fun deletePost(feedPost: FeedPost) {
         apiService.ignorePost(
@@ -119,5 +130,9 @@ class NewsFeedRepository(application: Application) {
 
     private fun getAccessToken(): String {
         return token?.accessToken ?: throw IllegalStateException("Token is null")
+    }
+
+    companion object {
+        private const val RETRY_TIMEOUT = 5000L
     }
 }
