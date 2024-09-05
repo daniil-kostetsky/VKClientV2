@@ -21,12 +21,15 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.vkclientv2.navigation.NavigationItem
 import com.example.vkclientv2.navigation.AppNavGraph
 import com.example.vkclientv2.navigation.rememberNavigationState
+import com.example.vkclientv2.presentation.ViewModelFactory
 import com.example.vkclientv2.presentation.comments.CommentsScreen
 import com.example.vkclientv2.presentation.news_feed.NewsFeedScreen
 
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    viewModelFactory: ViewModelFactory
+) {
     val navigationState = rememberNavigationState()
     Scaffold(
         bottomBar = {
@@ -70,6 +73,7 @@ fun MainScreen() {
             navHostController = navigationState.navHostController,
             newsFeedScreenContent = {
                 NewsFeedScreen(
+                    viewModelFactory = viewModelFactory,
                     paddingValues = paddingValues,
                     onCommentsClickListener = {
                         navigationState.navigateToComments(it)
@@ -78,6 +82,7 @@ fun MainScreen() {
             },
             commentsScreenContent = { feedPost ->
                 CommentsScreen(
+                    viewModelFactory = viewModelFactory,
                     onBackPressed = {
                         navigationState.navHostController.popBackStack()
                     },

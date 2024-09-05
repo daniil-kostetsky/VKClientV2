@@ -5,6 +5,7 @@ import androidx.compose.runtime.toMutableStateList
 import com.example.vkclientv2.data.extensions.mergeWith
 import com.example.vkclientv2.data.mapper.NewsFeedMapper
 import com.example.vkclientv2.data.network.ApiFactory
+import com.example.vkclientv2.data.network.ApiService
 import com.example.vkclientv2.domain.entity.AuthState
 import com.example.vkclientv2.domain.entity.FeedPost
 import com.example.vkclientv2.domain.entity.PostComment
@@ -22,10 +23,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
+class NewsFeedRepositoryImpl @Inject constructor(
+    private val storage: VKPreferencesKeyValueStorage,
+    private val apiService: ApiService,
+    private val mapper: NewsFeedMapper
+) : NewsFeedRepository {
 
-    private val storage = VKPreferencesKeyValueStorage(application)
     private val token get() = VKAccessToken.restore(storage)
 
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
@@ -33,9 +38,6 @@ class NewsFeedRepositoryImpl(application: Application) : NewsFeedRepository {
     private val refreshedListFlow = MutableSharedFlow<List<FeedPost>>()
 
     private val checkAuthStateEvents = MutableSharedFlow<Unit>(replay = 1)
-
-    private val apiService = ApiFactory.apiService
-    private val mapper = NewsFeedMapper()
 
     private val _feedPosts = mutableListOf<FeedPost>()
     private val feedPosts: List<FeedPost> get() = _feedPosts.toList()

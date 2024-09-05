@@ -9,9 +9,10 @@ import com.example.vkclientv2.domain.entity.StatisticType
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 import kotlin.math.absoluteValue
 
-class NewsFeedMapper {
+class NewsFeedMapper @Inject constructor() {
 
     fun mapResponseToPosts(response: NewsFeedResponseDto): List<FeedPost> {
         val groups = response.newsFeedContent.groups
@@ -58,9 +59,9 @@ class NewsFeedMapper {
         val result = mutableListOf<PostComment>()
         val comments = response.content.comments
         val profiles = response.content.profiles
-        for (comment in comments){
+        for (comment in comments) {
             if (comment.text.isBlank()) continue
-            val author = profiles.firstOrNull {it.id == comment.authorId} ?: continue
+            val author = profiles.firstOrNull { it.id == comment.authorId } ?: continue
             result += PostComment(
                 id = comment.id,
                 authorName = "${author.firstName} ${author.lastName}",

@@ -25,18 +25,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vkclientv2.domain.entity.AuthState
+import com.example.vkclientv2.presentation.NewsFeedApplication
+import com.example.vkclientv2.presentation.ViewModelFactory
 import com.example.vkclientv2.presentation.authorization.LoginScreen
 import com.example.vkclientv2.ui.theme.VkClientV2Theme
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKScope
+import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val component by lazy {
+        (application as NewsFeedApplication).component
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
         super.onCreate(savedInstanceState)
         setContent {
             VkClientV2Theme {
-                val mainViewModel: MainViewModel = viewModel()
+                val mainViewModel: MainViewModel = viewModel(factory = viewModelFactory)
                 val authState = mainViewModel.authState.collectAsState(AuthState.Initial)
                 val authLauncher = rememberLauncherForActivityResult(
                     contract = VK.getVKAuthActivityResultContract(),
@@ -45,7 +56,7 @@ class MainActivity : ComponentActivity() {
                     }
                 )
                 when (authState.value) {
-                    is AuthState.Authorized -> MainScreen()
+                    is AuthState.Authorized -> MainScreen(viewModelFactory)
                     is AuthState.NotAuthorized -> LoginScreen {
                         authLauncher.launch(listOf(VKScope.WALL, VKScope.FRIENDS))
                     }

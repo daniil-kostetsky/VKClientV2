@@ -1,11 +1,9 @@
 package com.example.vkclientv2.presentation.news_feed
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vkclientv2.data.extensions.mergeWith
-import com.example.vkclientv2.data.repository.NewsFeedRepositoryImpl
 import com.example.vkclientv2.domain.entity.FeedPost
 import com.example.vkclientv2.domain.usecases.ChangeLikeStatusUseCase
 import com.example.vkclientv2.domain.usecases.DeletePostUseCase
@@ -18,15 +16,15 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class NewsFeedViewModel(application: Application) : AndroidViewModel(application) {
+class NewsFeedViewModel @Inject constructor(
+    private val getRecommendationsUseCase: GetRecommendationsUseCase,
+    private val loadNextDataUseCase: LoadNextDataUseCase,
+    private val changeLikeStatusUseCase: ChangeLikeStatusUseCase,
+    private val deletePostUseCase: DeletePostUseCase
+) : ViewModel() {
 
-    private val repository = NewsFeedRepositoryImpl(application)
-
-    private val getRecommendationsUseCase = GetRecommendationsUseCase(repository)
-    private val loadNextDataUseCase = LoadNextDataUseCase(repository)
-    private val changeLikeStatusUseCase = ChangeLikeStatusUseCase(repository)
-    private val deletePostUseCase = DeletePostUseCase(repository)
 
     private val recommendationFlow = getRecommendationsUseCase()
 
@@ -37,8 +35,8 @@ class NewsFeedViewModel(application: Application) : AndroidViewModel(application
     }
 
     val screenState: Flow<NewsFeedScreenState> = recommendationFlow
-        .filter {  it.isNotEmpty()}
-        .map { NewsFeedScreenState.Posts(it) as NewsFeedScreenState}
+        .filter { it.isNotEmpty() }
+        .map { NewsFeedScreenState.Posts(it) as NewsFeedScreenState }
         .onStart { emit(NewsFeedScreenState.Loading) }
         .mergeWith(loadNextDataFlow)
 
