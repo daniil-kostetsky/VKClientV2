@@ -20,9 +20,4 @@ interface ViewModelModule {
     @ViewModelKey(MainViewModel::class)
     @Binds
     fun bindMainViewModel(impl: MainViewModel): ViewModel
-
-    @IntoMap
-    @ViewModelKey(CommentsViewModel::class)
-    @Binds
-    fun bindCommentsViewModel(impl: CommentsViewModel): ViewModel
 }
