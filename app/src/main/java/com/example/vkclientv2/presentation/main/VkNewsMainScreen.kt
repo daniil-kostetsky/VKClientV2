@@ -27,9 +27,7 @@ import com.example.vkclientv2.presentation.news_feed.NewsFeedScreen
 
 
 @Composable
-fun MainScreen(
-    viewModelFactory: ViewModelFactory
-) {
+fun MainScreen() {
     val navigationState = rememberNavigationState()
     Scaffold(
         bottomBar = {
@@ -73,7 +71,6 @@ fun MainScreen(
             navHostController = navigationState.navHostController,
             newsFeedScreenContent = {
                 NewsFeedScreen(
-                    viewModelFactory = viewModelFactory,
                     paddingValues = paddingValues,
                     onCommentsClickListener = {
                         navigationState.navigateToComments(it)

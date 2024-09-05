@@ -1,6 +1,5 @@
 package com.example.vkclientv2.presentation.comments
 
-import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,10 +23,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,21 +35,31 @@ import coil.compose.AsyncImage
 import com.example.vkclientv2.R
 import com.example.vkclientv2.domain.entity.FeedPost
 import com.example.vkclientv2.domain.entity.PostComment
-import com.example.vkclientv2.presentation.NewsFeedApplication
-import com.example.vkclientv2.presentation.ViewModelFactory
+import com.example.vkclientv2.presentation.getApplicationComponent
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsScreen(
     onBackPressed: () -> Unit,
     feedPost: FeedPost
 ) {
-    val component = (LocalContext.current.applicationContext as NewsFeedApplication)
-        .component
+    val component = getApplicationComponent()
         .getCommentsScreenComponentFactory()
         .create(feedPost)
     val viewModel: CommentsViewModel = viewModel(factory = component.getViewModelFactory())
     val screenState = viewModel.screenState.collectAsState(initial = CommentsScreenState.Initial)
+
+    CommentsScreenContent(
+        screenState = screenState,
+        onBackPressed = onBackPressed
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CommentsScreenContent(
+    screenState: State<CommentsScreenState>,
+    onBackPressed: () -> Unit
+) {
     val currentState = screenState.value
     if (currentState is CommentsScreenState.Comments) {
         Scaffold(
