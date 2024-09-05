@@ -2,10 +2,10 @@ package com.example.vkclientv2.data.mapper
 
 import com.example.vkclientv2.data.model.CommentsResponseDto
 import com.example.vkclientv2.data.model.NewsFeedResponseDto
-import com.example.vkclientv2.domain.FeedPost
-import com.example.vkclientv2.domain.PostComment
-import com.example.vkclientv2.domain.StatisticItem
-import com.example.vkclientv2.domain.StatisticType
+import com.example.vkclientv2.domain.entity.FeedPost
+import com.example.vkclientv2.domain.entity.PostComment
+import com.example.vkclientv2.domain.entity.StatisticItem
+import com.example.vkclientv2.domain.entity.StatisticType
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

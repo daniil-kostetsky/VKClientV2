@@ -1,9 +1,8 @@
 package com.example.vkclientv2.navigation
 
 import android.net.Uri
-import com.example.vkclientv2.domain.FeedPost
+import com.example.vkclientv2.domain.entity.FeedPost
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 
 sealed class Screen(
     val route: String

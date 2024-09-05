@@ -1,4 +1,4 @@
-package com.example.vkclientv2.domain
+package com.example.vkclientv2.domain.entity
 
 data class StatisticItem(
     val type: StatisticType,

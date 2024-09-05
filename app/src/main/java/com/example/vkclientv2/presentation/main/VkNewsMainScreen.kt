@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.vkclientv2.domain.NavigationItem
+import com.example.vkclientv2.navigation.NavigationItem
 import com.example.vkclientv2.navigation.AppNavGraph
 import com.example.vkclientv2.navigation.rememberNavigationState
 import com.example.vkclientv2.presentation.comments.CommentsScreen

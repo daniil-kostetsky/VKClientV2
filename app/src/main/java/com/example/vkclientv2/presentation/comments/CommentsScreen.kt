@@ -1,7 +1,6 @@
 package com.example.vkclientv2.presentation.comments
 
 import android.app.Application
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,22 +25,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.currentCompositionLocalContext
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.compose.AsyncImage
 import com.example.vkclientv2.R
-import com.example.vkclientv2.domain.FeedPost
-import com.example.vkclientv2.domain.PostComment
-import com.example.vkclientv2.navigation.encode
+import com.example.vkclientv2.domain.entity.FeedPost
+import com.example.vkclientv2.domain.entity.PostComment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

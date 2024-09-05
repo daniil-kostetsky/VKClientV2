@@ -20,13 +20,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.vkclientv2.ui.theme.VkClientV2Theme
-import com.example.vkclientv2.presentation.authorization.AuthState
+import com.example.vkclientv2.domain.entity.AuthState
 import com.example.vkclientv2.presentation.authorization.LoginScreen
+import com.example.vkclientv2.ui.theme.VkClientV2Theme
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKScope
 
@@ -37,11 +37,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             VkClientV2Theme {
                 val mainViewModel: MainViewModel = viewModel()
-                val authState = mainViewModel.authState.observeAsState(AuthState.Initial)
+                val authState = mainViewModel.authState.collectAsState(AuthState.Initial)
                 val authLauncher = rememberLauncherForActivityResult(
                     contract = VK.getVKAuthActivityResultContract(),
                     onResult = {
-                        mainViewModel.performAuthResult(it)
+                        mainViewModel.performAuthResult()
                     }
                 )
                 when (authState.value) {
